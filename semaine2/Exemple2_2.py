@@ -21,7 +21,7 @@ Lst = -75        # longitude  méridien HNE -5
 #
 # importer le fichier meteo
 #
-donnees = np.loadtxt("Meteo_horaire_Montreal.txt",skiprows = 1)   # donnes climatiques horaire Montreal  % valeurs en kJ/hr/m2
+donnees = np.loadtxt('Meteo_horaire_Montreal.txt',skiprows = 1)   # donnes climatiques horaire Montreal  % valeurs en kJ/hr/m2
 temps = donnees[:,0]   # heures
 I =  donnees[:,3]/1000   # valeurs de I total en MJoules/m2/ hr
 Ib =  donnees[:,4]/1000   # valeurs de I direct  en MJoules/m2/ hr
