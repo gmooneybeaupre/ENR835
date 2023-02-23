@@ -30,7 +30,7 @@ e2 = 0.88
 
 # COMPUTATION DES SOLUTIONS
 # a) Trouver la radiation absorbée S
-Kb = 
+Kb =  1
 tau_alpha_d = Kd*tau_alpha_n
 tau_alpha_r = Kd*tau_alpha_n
 
