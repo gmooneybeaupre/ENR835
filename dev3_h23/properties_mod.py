@@ -58,7 +58,7 @@ def air_prop(nom,T):
     Tmax = x[x.size-1]
     if T<Tmin or T>Tmax:
         print ('          Warning : La valeur de T est en dehors de la table : extrapolation ! ')
-    p = interp(T,x, y)
+    p = np.interp(T,x, y)
     if nom =='mu':
         p = p*10**-7
     if nom =='nu':
