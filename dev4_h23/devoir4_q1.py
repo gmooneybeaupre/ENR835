@@ -15,7 +15,7 @@ mois = ['janv','févr','mars','avril','mai','juin','juil','aout','sept','oct','n
 #
 N = 2
 Ac = 2.874*N
-donnees = np.loadtxt("devoir3.txt",skiprows = 1)
+donnees = np.loadtxt("devoir4.txt",skiprows = 1)
 temps = donnees[:,0]   # heures
 dt = temps[1] - temps[0]    # delta t
 It = donnees[:,1]
