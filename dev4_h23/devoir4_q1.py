@@ -5,16 +5,37 @@ import numpy as np
 from matplotlib.pyplot import *
 from matplotlib.sankey import Sankey
 
+# DONNÉES PRÉLIMINAIRES
 j_type = np.array([17,47,75,105,135,162,198,228,258,288,318,344])
 nm = np.array([31,28,31,30,31,30,31,31,30,31,30,31])               # nombre de jours par mois
 hrm = np.array([744,672,744,720,744,720,744,744,720,744,720,744])  # nombre d'heures dans chaque mois
 hrr = np.array([744,1416,2160,2880,3624,4344,5088,5832,6552,7296,8016,8760]) # nombre d'heures écoulées après chaque mois
 mois = ['janv','févr','mars','avril','mai','juin','juil','aout','sept','oct','nov','déc']
-#
-# lecture fichier de sortie
-#
+H_b = np.array([1.5817, 2.5884, 3.8525, 4.5808, 5.6846, 6.2114, 6.0228, 4.8676, 4.0267, 2.5372, 1.2235, 1.1742]) # kWh/m^2-jr
+H_b = H_b * 3.6e6 # J/m^2-jr
+tabb_tan = np.array([0.96, 0.96, 0.96, 0.92, 0.92, 0.92, 0.92, 0.92, 0.92, 0.92, 0.96, 0.96])
+Tinf = np.array([-10.3, -8.8, -2.4, 5.7, 12.9, 18, 20.8, 19.4, 14.5, 8.3, 1.6, -6.9])
+rhog = np.array([0.7, 0.7, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0,4])
 N = 2
+phi = 45.5
+gamma = 0 
+beta = 45
 Ac = 2.874*N
+ep = 0.9
+cp = 4190
+mp = 71.32/3600
+Ccoll = cp*mp
+Cmin = Ccoll
+eta0 = 0.717/3600
+Fr_tan = eta0
+a1 = 14.45076/3.6
+b0 = 0.11
+b1 = 0.051
+FrUL = a1
+Tref = 100
+Frp_Fr = 1/(1 + ((Ac*FrUL)/Ccoll)*((Ccoll/(ep*Cmin))-1))
+
+# EXTRACTION DES DONNÉES TRNSYS
 donnees = np.loadtxt("devoir4.txt",skiprows = 1)
 temps = donnees[:,0]   # heures
 dt = temps[1] - temps[0]    # delta t
@@ -25,6 +46,8 @@ qou_res = donnees[:,4]
 qaux = donnees[:,5]
 qpertes  = donnees[:,6]
 DeltaEp  = donnees[:,7]      # Variation d'énergie emmagasinée
+
+
 Eaux = sum(qaux)*dt # kJoules
 Epertes = sum(qpertes)*dt  # kJoules
 EperteskWh = Epertes/3600
@@ -71,6 +94,24 @@ ax = gca()
 ax.set_xticks(im)
 ax.set_xticklabels(mois, minor=False, rotation=45)
 
+# MÉTHODE F-CHART
+fchart_m = np.zeros(12)
+for mois in range(0,12):
+    njt = j_type[mois]
+    Ho_b = irradiation_extraterrestre_jour(njt,phi)
+    Kt_b = H_b[mois]/Ho_b
+    delt = decl_solaire(njt)
+    omesm = angle_sunset(phi,delt)
+    Hd_b = Erbs_mois(Kt_b,omesm)
+    Hb_b = H_b[mois] - Hd_b
+    Rb_b = Calcul_Rb_mois(phi,njt,beta,gamma)
+    Ht_b,HmtbE,HmtdE,HmtrE = modele_isotropique(H_b[mois],Hb_b,Hd_b,beta,Rb_b,rhog[mois])
+
+    Xm = FrUL*Frp_Fr*(Tref-Tinf[mois])*(3600*24*nm[mois])*(Ac/L[mois])
+    Ym = Fr_tan*tabb_tan*Frp_Fr*nm[mois]*(Ac/L[mois])*Ht_b
+    print(Frp_Fr)
+    #fchart_m[mois] = fchart(Xm,Ym)
+
 #
 # bilan reservoir
 #
@@ -82,7 +123,7 @@ print('Variation d''énergie du réservoir TRNSYS =',DeltaE, ' KJ')
 #
 # Flow d'énergie par diagramme de Sankey
 #
-flag_plot = True
+flag_plot = False
 if (flag_plot):
     E1 = Esoleil/1e6  # GJoules
     Eperdue_capteurs = Esoleil - Eutile # pertes capteurs

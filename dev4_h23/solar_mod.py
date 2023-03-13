@@ -919,9 +919,9 @@ def  Calcul_Rb_mois(phi,n,beta,gam):
     # On calcule Rbb avec 2.19.3a (DB 3rd edition)
     delt  = decl_solaire(n)
     ome = angle_sunset(phi,delt)
-    ome1 = np.arccosd(-tand(phi)*tand(delt))
+    ome1 = arccosd(-tand(phi)*tand(delt))
     s = np.sign(cosd(gam))
-    ome2 = np.arccosd(-tand(phi-s*beta)*tand(delt))
+    ome2 = arccosd(-tand(phi-s*beta)*tand(delt))
     omes = min(ome1,ome2)
 #    omes = ome1
     num = sind(omes)*cosd(delt)*(cosd(phi)*cosd(beta)+sind(phi)*sind(beta)*cosd(gam))+ \
