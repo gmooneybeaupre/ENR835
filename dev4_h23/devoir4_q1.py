@@ -26,7 +26,7 @@ cp = 4190
 mp = 71.32/3600
 Ccoll = cp*mp
 Cmin = Ccoll
-eta0 = 0.717/3600
+eta0 = 0.717
 Fr_tan = eta0
 a1 = 14.45076/3.6
 b0 = 0.11
@@ -95,22 +95,38 @@ ax.set_xticks(im)
 ax.set_xticklabels(mois, minor=False, rotation=45)
 
 # MÉTHODE F-CHART
+print("")
+print("Méthode F-chart")
 fchart_m = np.zeros(12)
-for mois in range(0,12):
-    njt = j_type[mois]
+L = L*3600
+sum1 = 0
+sum2 = 0
+
+for m in range(0,12):
+    njt = j_type[m]
     Ho_b = irradiation_extraterrestre_jour(njt,phi)
-    Kt_b = H_b[mois]/Ho_b
+    Kt_b = H_b[m]/Ho_b
     delt = decl_solaire(njt)
     omesm = angle_sunset(phi,delt)
     Hd_b = Erbs_mois(Kt_b,omesm)
-    Hb_b = H_b[mois] - Hd_b
+    Hb_b = H_b[m] - Hd_b
     Rb_b = Calcul_Rb_mois(phi,njt,beta,gamma)
-    Ht_b,HmtbE,HmtdE,HmtrE = modele_isotropique(H_b[mois],Hb_b,Hd_b,beta,Rb_b,rhog[mois])
+    Ht_b,HmtbE,HmtdE,HmtrE = modele_isotropique(H_b[m],Hb_b,Hd_b,beta,Rb_b,rhog[m])
 
-    Xm = FrUL*Frp_Fr*(Tref-Tinf[mois])*(3600*24*nm[mois])*(Ac/L[mois])
-    Ym = Fr_tan*tabb_tan*Frp_Fr*nm[mois]*(Ac/L[mois])*Ht_b
-    print(Frp_Fr)
-    #fchart_m[mois] = fchart(Xm,Ym)
+    Xm = FrUL*Frp_Fr*(Tref-Tinf[m])*(3600*24*nm[m])*(Ac/L[m])
+    Ym = Fr_tan*tabb_tan[m]*Frp_Fr*nm[m]*(Ac/L[m])*Ht_b
+    fchart_m[m] = fchart(Xm,Ym)
+    
+    sum1 = sum1 + fchart_m[m]*L[m]
+    sum2 = sum2 + L[m]
+    
+    mess = "F-chart pour le mois de " + mois[m] + " : "
+    print(mess,'%.2f' % (100*fchart_m[m]), " %")
+
+fchart_annee = sum1/sum2
+mess = "F-chart pour l'année : "
+print(mess, '%.2f' % (100*fchart_annee), " %")    
+print("")
 
 #
 # bilan reservoir
