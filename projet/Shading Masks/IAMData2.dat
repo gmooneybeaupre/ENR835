@@ -1,0 +1,93 @@
+   0   15   30   45   60   75   90
+   0   15   30   45   60   75   90
+1.00
+1.00
+0.98
+0.96
+0.90
+0.71
+0.00
+1.01
+1.01
+0.99
+0.97
+0.91
+0.72
+0.00
+1.03
+1.03
+1.01
+0.99
+0.93
+0.73
+0.00
+1.05
+1.05
+1.03
+1.01
+0.95
+0.75
+0.00
+1.04
+1.04
+1.02
+1.00
+0.94
+0.74
+0.00
+1.02
+1.02
+1.00
+0.98
+0.92
+0.72
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+*--- Comments (These lines are ignored by Type 71) ---
+*
+*This file includes IAM data for a hypotethical collector for which the following data is available:
+*
+*Direction        |   0° |  15° |  30° |  45° |  60° |  75° |  90° |
+*-------------------------------------------------------------------
+*Transversal  IAM | 1.00 | 1.01 | 1.03 | 1.05 | 1.04 | 1.02 | 0.00 |
+*Longitudinal IAM | 1.00 | 1.00 | 0.98 | 0.96 | 0.90 | 0.71 | 0.00 |
+*
+*NOTE: These values are not meant to be representative of "standard solar collectors". 
+*      They were chosen to illustrate the use of Type 71
+*      Collector test reports are available on the web from testing intitutes if you need 
+*      representative data (e.g. www.spf.ch).
+*
+*Type 71 calculates the longitudinal angle and transversal angle corresponding to any incidence angle and needs the IAM for that particular combination.
+*We have to assume that the IAM value for any angle of incidence is:
+*(IAM for the corresp. trans. angle and for a 0 long. angle) *  (IAM for the corresp. long. angle and for a 0 trans. angle)
+*
+*E.g. the value for a transversal incidence angle = 15° and a longitudinal incidence angle=30° is simply 1.01*0.98=0.99
+*
+*The data file for Type71 must include the following data:
+*
+*--- The file first includes the 7 values of transversal angle:
+*   0   15   30   45   60   75   90
+*--- Then the 7 values of longitudinal angle:
+*   0   15   30   45   60   75   90
+*--- Then a matrix of IAM values for different angles. The value in line i, column j corresponds to transversal angle i, longitudinal angle j.
+*--- The matrix is written in one long column, line after line
+*--- 1 st value: IAM for Transversal angle = 0° and Longitudinal angle = 0 (1.00*1.00=1.00)
+*1.00
+*--- 2 nd value: IAM for Transversal angle = 0° and Longitudinal angle = 15 (1.00*1.00=1.00)
+*1.00
+*--- 3 rd value: IAM for Transversal angle = 0° and Longitudinal angle = 30 (1.00*0.98=0.98)
+*0.98
+*--- Etc.
+*--- 8th value: IAM for Transversal angle = 15° and Longitudinal angle = 0 (1.01*1.00=1.01)
+*1.01
+*--- 9th value: IAM for Transversal angle = 15° and Longitudinal angle = 15 (1.01*1.00=1.01)
+*1.01
+*--- 10th value: IAM for Transversal angle = 15° and Longitudinal angle = 30 (1.01*0.98=0.99)
+*0.99
+*--- Etc.
